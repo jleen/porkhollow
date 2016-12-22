@@ -3,13 +3,23 @@ from tabulate import tabulate
 import fileinput
 import re
 
-TOTAL_PURCHASE = 99999
+TOTAL_PURCHASE = 9999
 desired_ratio = {
         'VBTLX': 7.5 / 100,
         'VTABX': 2.5 / 100,
         'VTIAX': 22.5 / 100,
         'VTSAX': 67.5 / 100
         }
+
+
+def monetize(amt):
+    return '${: >10,.2f}'.format(amt)
+
+
+def percentize(rat):
+    return '{:>8.2f}%'.format(rat * 100)
+
+
 funds = desired_ratio.keys()
 
 PARSE1 = re.compile(r'^(V[A-Z]*)\t')
@@ -45,20 +55,22 @@ minimum_purchase = {k: max_weight * desired_ratio[k] - current_holdings[k]
 min_total_purchase = sum(minimum_purchase.values())
 extra_total_purchase = TOTAL_PURCHASE - min_total_purchase
 
-assert extra_total_purchase >= 0
-extra_purchase = {k: extra_total_purchase * desired_ratio[k] for k in funds}
-
-purchase = {k: minimum_purchase[k] + extra_purchase[k] for k in funds}
+if extra_total_purchase >= 0:
+    # We're purchasing more than enough to reach the target ratio,
+    # so distribute the rest proportionally to maintain the target ratio.
+    extra_purchase = {k: extra_total_purchase * desired_ratio[k]
+                      for k in funds}
+    purchase = {k: minimum_purchase[k] + extra_purchase[k] for k in funds}
+else:
+    # We're not going to reach the target, so allocate funds in proportion to
+    # the purchases that *would* reach the target.
+    purchase = {
+            k: minimum_purchase[k] * TOTAL_PURCHASE / min_total_purchase
+            for k in funds}
 
 new_holdings = {k: purchase[k] + current_holdings[k] for k in funds}
 total_new_holdings = sum(new_holdings.values())
 new_ratio = {k: v / total_new_holdings for [k, v] in new_holdings.items()}
-
-def monetize(amt):
-    return '${: >10,.2f}'.format(amt)
-
-def percentize(rat):
-    return '{:>8.2f}%'.format(rat * 100)
 
 print(tabulate(
         [[k, monetize(current_holdings[k]),
