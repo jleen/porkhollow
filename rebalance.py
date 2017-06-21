@@ -22,7 +22,7 @@ def percentize(rat):
 
 funds = desired_ratio.keys()
 
-PARSE1 = re.compile(r'^(V[A-Z]*)\t')
+PARSE1 = re.compile(r'^(V[A-Z]*)\s')
 PARSE2 = re.compile(r'^\$([0-9,]*\.[0-9][0-9])$')
 
 fund = None
@@ -41,10 +41,9 @@ for line in list(fileinput.input()):
                 fund = None
     else:
         match = PARSE2.match(line)
-        if not match:
-            raise Exception('no cashooooola')
-        current_holdings[fund] = float(match.group(1).replace(',', ''))
-        fund = None
+        if match:
+            current_holdings[fund] = float(match.group(1).replace(',', ''))
+            fund = None
 
 total_holdings = sum(current_holdings.values())
 current_ratio = {k: v / total_holdings for [k, v] in current_holdings.items()}
