@@ -3,8 +3,10 @@ from tabulate import tabulate
 
 import fileinput
 import re
+import sys
 
-TOTAL_PURCHASE = 9999
+TOTAL_PURCHASE = float(sys.argv[1])
+
 desired_ratio = OrderedDict([
         ('VBTLX', 7.5 / 100),
         ('VTABX', 2.5 / 100),
@@ -31,7 +33,7 @@ current_holdings = {}
 current_ratio = {}
 new_holdings = {}
 
-for line in list(fileinput.input()):
+for line in list(fileinput.input(sys.argv[2:])):
     if not fund:
         match = PARSE1.match(line)
         if match:
