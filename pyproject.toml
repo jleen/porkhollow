@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "porkhollow"
+version = "0.1.0"
+description = ""
+authors = ["John Leen <jleen@saturnvalley.org>"]
+
+[tool.poetry.dependencies]
+python = "^3.8,<3.10"
+tabulate = "^0.8.9"
+
+[tool.poetry.dev-dependencies]
+pytype = "^2021.4.15"
+
+[tool.poetry.scripts]
+rebalance = 'porkhollow.rebalance:rebalance'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
