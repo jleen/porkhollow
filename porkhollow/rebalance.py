@@ -27,7 +27,7 @@ def rebalance():
     funds = desired_ratio.keys()
 
     PARSE1 = re.compile(r'^(V[A-Z]*)\s')
-    PARSE2 = re.compile(r'^\$([0-9,]*\.[0-9][0-9])$')
+    PARSE2 = re.compile(r'^.*\$([0-9,]*,\d\d\d\.\d\d)')
 
     fund = None
     current_holdings = {}
@@ -98,7 +98,7 @@ def rebalance():
     print(tabulate(
             [[k, monetize(current_holdings[k]),
               monetize(purchase[k]), monetize(new_holdings[k]),
-              percentize(current_ratio[k]), percentize(new_ratio[k])]
+              percentize(current_ratio[k]), percentize(new_ratio[k]), percentize(desired_ratio[k])]
              for k in funds],
-            headers=['fund', 'current', 'buy', 'new', 'crnt%', 'new%'],
+            headers=['fund', 'current', 'buy', 'new', 'crnt%', 'new%', 'trgt%'],
             stralign='right'))
