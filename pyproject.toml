@@ -1,14 +1,16 @@
-[tool.poetry]
+[project]
 name = "porkhollow"
 version = "0.1.0"
 description = ""
-authors = ["John Leen <jleen@saturnvalley.org>"]
+authors = [
+    { name = "John Leen <jleen@saturnvalley.org>" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "tabulate >=0.8.9"
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-tabulate = "^0.8.9"
-
-[tool.poetry.scripts]
+[project.scripts]
 rebalance = 'porkhollow.rebalance:rebalance'
 
 [build-system]
