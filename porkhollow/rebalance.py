@@ -36,12 +36,21 @@ def rebalance():
 
     for line in list(fileinput.input(sys.argv[2:])):
         if not fund:
+            # We’re looking for a fund name.
             match = PARSE1.match(line)
             if match:
                 fund = match.group(1)
                 if fund not in funds:
                     fund = None
+                else:
+                    saw_percent = 0
+        elif fund and saw_percent < 2:
+            # We’ve found a fund name, and we’re skipping past irrelevant fields.
+            # There are two percentage-change fields before the field we care about.
+            if '%' in line:
+                saw_percent += 1
         else:
+            # The next big money field we find should be the current holdings.
             match = PARSE2.match(line)
             if match:
                 current_holdings[fund] = float(match.group(1).replace(',', ''))
