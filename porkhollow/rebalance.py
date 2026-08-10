@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "tabulate>=0.10.0",
+# ]
+# ///
+
 from collections import OrderedDict
 from tabulate import tabulate
 
@@ -111,3 +118,6 @@ def rebalance():
              for k in funds],
             headers=['fund', 'current', 'buy', 'new', 'crnt%', 'new%', 'trgt%'],
             stralign='right'))
+
+if __name__ == '__main__':
+    rebalance()
